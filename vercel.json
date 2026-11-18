@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/", "destination": "/followers" },
+    { "source": "/free-instagram-followers", "destination": "/followers.html" },
+    { "source": "/free-mobile-recharge", "destination": "/recharge.html" }
+  ]
+}
